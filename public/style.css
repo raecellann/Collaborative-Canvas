@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+body {
+    position: relative;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #DAA06D;
+    padding-top: 20px;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("./assets/background-canvas.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    z-index: -1;
+}
+
+canvas {
+    border: 1px solid #333;
+    background-color: #fff;
+    border-radius: 3%;
+    position: absolute;
+    margin-left: 30%;
+    top: 53%;
+    transform: translateY(-50%);
+    margin-bottom: 0;
+}
+
+.titles {
+    position: relative;
+    z-index: 2;
+}
+
+.titles h1 {
+    font-family: "Pixelify Sans", serif;
+    font-optical-sizing: auto;
+    margin-top: 0px;
+    z-index: 1;
+    color: #fff;
+    text-align: center;
+}
+
+.color-title h2 {
+    font-family: "Pixelify Sans", serif;
+    font-optical-sizing: auto;
+    margin-top: 20px;
+    z-index: 1;
+    color: #fff;
+    text-align: left;
+    margin-left: 35px;
+    margin-top: 5%;
+}
+
+#colorPicker {
+    width: 130px;
+    height: 40px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    margin-left: 55px;
+}
+
+#colorPicker:hover {
+    border-color: #bdc7bdc7;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#colorPicker input[type="color"] {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+#saveBtn, #changeColorBtn, #eraseBtn {
+    font-family: "Pixelify Sans", serif;
+    font-optical-sizing: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #393f39;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex-direction: row;
+}
+
+#saveBtn:hover, #changeColorBtn:hover, #eraseBtn:hover {
+    background-color: #6e706ec7;
+}
+
+#changeColorBtn {
+    margin-top: 0;
+    margin-left: 5%;
+}
+
+#eraseBtn {
+    margin-top: 10px;
+    margin-left: 5%;
+}
+
+.tools h3 {
+    font-family: "Pixelify Sans", serif;
+    font-optical-sizing: auto;
+    color: white;
+    text-align: left;
+    margin-left: 35px;
+}
+
+.tools {
+    margin-top: 0;
+}
+
+#brushSize {
+    display: block;
+    margin-top: 10px;
+    margin-left: 5%;
+}
+
+#brushSize::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: rgb(144,68,19);
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    margin-top: -4px;
+}
+
+#brushSize::-webkit-slider-runnable-track {
+    background: linear-gradient(124deg, rgba(144,68,19,1) 0%, rgba(151,198,139,1) 59%);
+    height: 8px;
+}
+
+label[for="brushSize"] {
+    font-family: "Pixelify Sans", serif;
+    font-size: 1rem;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 10px;
+    display: block;
+    margin-left: 35px;
+    margin-top: 10px;
+}
