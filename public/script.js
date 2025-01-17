@@ -8,7 +8,7 @@ let eraseBtn = document.getElementById("eraseBtn");
 canvas.width = 600;
 canvas.height = 480;
 
-var io = io.connect("http://localhost:5000/");
+var io = io.connect("http://localhost:5001/");
 
 let ctx = canvas.getContext("2d");
 let x, y;
@@ -17,13 +17,19 @@ let currentColor = colorPicker.value;
 let isErasing = false;
 let brushSize = 5;
 
-colorPicker.addEventListener('input', (event) => {
+
+colorPicker.addEventListener("input", (event) => {
     currentColor = event.target.value;
     io.emit("colorChange", { color: currentColor });
 });
 
+let lastEmit = 0;
 canvas.addEventListener("mousemove", (event) => {
     if (!mouseDown) return;
+
+    const now = Date.now();
+    if (now - lastEmit < 30) return; 
+    lastEmit = now;
 
     const rect = canvas.getBoundingClientRect();
     x = event.clientX - rect.left;
@@ -87,20 +93,8 @@ io.on("canvasBackgroundChange", ({ backgroundColor }) => {
     canvas.style.backgroundColor = backgroundColor;
 });
 
-io.on("history", (history) => {
-    history.forEach((event) => {
-        if (event.type === 'ondown') {
-            const { x, y, color } = event.data;
-            ctx.beginPath();
-            ctx.strokeStyle = color;
-            ctx.moveTo(x, y);
-        } else if (event.type === 'ondraw') {
-            const { x, y, color } = event.data;
-            ctx.strokeStyle = color;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-        }
-    });
+io.on("clearCanvas", () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
 function getRandomColor() {
@@ -133,6 +127,12 @@ saveBtn.addEventListener("click", () => {
 
 brushSizeInput.addEventListener("input", (event) => {
     brushSize = event.target.value;
+    ctx.lineWidth = brushSize;
+    io.emit("brushSizeChange", { brushSize });
+});
+
+io.on("brushSizeChange", ({ brushSize }) => {
+    brushSizeInput.value = brushSize;
     ctx.lineWidth = brushSize;
 });
 

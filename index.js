@@ -9,6 +9,32 @@ let currentBackgroundColor = '#FFFFFF';
 let currentBrushSize = 5;
 let drawingHistory = [];
 
+class Lock {
+    constructor() {
+        this.queue = [];
+        this.locked = false;
+    }
+
+    async acquire() {
+        if (this.locked) {
+            await new Promise(resolve => this.queue.push(resolve));
+        } else {
+            this.locked = true;
+        }
+    }
+
+    release() {
+        if (this.queue.length > 0) {
+            const next = this.queue.shift();
+            next(); 
+        } else {
+            this.locked = false;
+        }
+    }
+}
+
+const historyLock = new Lock();
+
 io.on("connect", (socket) => {
     connections.push(socket);
     console.log(`${socket.id} has connected`);
@@ -18,17 +44,34 @@ io.on("connect", (socket) => {
     socket.emit("brushSizeChange", { brushSize: currentBrushSize });
     socket.emit("history", drawingHistory);
 
+    socket.on("draw", async (data) => {
+        await historyLock.acquire();
+        try {
+            drawingHistory.push({
+                type: 'ondraw',
+                data: { x: data.x, y: data.y, color: data.color, brushSize: data.brushSize }
+            });
+        } finally {
+            historyLock.release();
+        }
+        socket.broadcast.emit("ondraw", { x: data.x, y: data.y, color: data.color, brushSize: data.brushSize });
+    });
+
     socket.on("down", (data) => {
         socket.broadcast.emit("ondown", { x: data.x, y: data.y, color: data.color });
     });
 
-    socket.on("draw", (data) => {
-        drawingHistory.push({ x: data.x, y: data.y, color: data.color, brushSize: data.brushSize });
-        socket.broadcast.emit("ondraw", { x: data.x, y: data.y, color: data.color, brushSize: data.brushSize });
-    });
-
-    socket.on("erase", (data) => {
-        socket.broadcast.emit("onerase", { x: data.x, y: data.y, color: "#FFFFFF", brushSize: data.brushSize });
+    socket.on("erase", async (data) => {
+        await historyLock.acquire();
+        try {
+            drawingHistory.push({
+                type: 'onerase',
+                data: { x: data.x, y: data.y, brushSize: data.brushSize }
+            });
+        } finally {
+            historyLock.release();
+        }
+        socket.broadcast.emit("onerase", { x: data.x, y: data.y, brushSize: data.brushSize });
     });
 
     socket.on("colorChange", (data) => {
@@ -37,19 +80,11 @@ io.on("connect", (socket) => {
     });
 
     socket.on("canvasBackgroundChange", (data) => {
+        currentBackgroundColor = data.backgroundColor;
         io.emit("canvasBackgroundChange", { backgroundColor: data.backgroundColor });
     });
 
-    socket.on("brushSizeChange", (data) => {
-        currentBrushSize = data.brushSize;
-        io.emit("brushSizeChange", { brushSize: currentBrushSize });
-    });
-
-    socket.on("getHistory", () => {
-        socket.emit("history", drawingHistory);
-    });
-
-    socket.on("disconnect", (reason) => {
+    socket.on("disconnect", () => {
         console.log(`${socket.id} has disconnected.`);
         connections = connections.filter((con) => con.id !== socket.id);
     });
@@ -57,5 +92,5 @@ io.on("connect", (socket) => {
 
 app.use(express.static("public"));
 
-let PORT = process.env.PORT || 5000;
+let PORT = process.env.PORT || 5001;
 httpServer.listen(PORT, () => console.log(`Server started on port ${PORT}`));
