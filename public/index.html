@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./style.css">
-        <title>Canvas Drawing</title>
-    </head>
-    <body>
-        <div class="titles">
-            <h1>Canvas Drawing</h1>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Canvas Drawing</title>
+</head>
+<body>
 
-        <div class="color-title">
-            <h2>Line Color Selection</h2>
-        </div>
+    <div class="titles">
+        <h1>Canvas Drawing</h1>
+    </div>
+    <div class="color-title">
+        <h2>Line Color Selection</h2>
+    </div>
+    <div class="canvas-space">
+        <input type="color" id="colorPicker" value="#000000"> 
+        <canvas id="canvas"></canvas>
 
-        <div class="canvas-space">
-            <input type="color" id="colorPicker" value="#000000"> 
-            <canvas id="canvas"></canvas>
-        </div>
-
-        <div class="tools">
-            <h3>More Tools</h3>
-
-            <button id="changeColorBtn">
-                <img src="assets/Untitled design (5).png" alt="Color Icon" class="button-icon"> Change Canvas Color
-            </button>
-
-            <label for="brushSize">Brush Size:</label>
-            <input type="range" id="brushSize" min="1" max="20" value="5">
-
-            <button id="eraseBtn">
-                <img src="assets/eraser.png" alt="Erase Icon" class="button-icon"> Erase
-            </button>
-
-            <button id="saveBtn">
-                <img src="assets/save.png" alt="Save Icon" class="button-icon"> Save Drawing
-            </button>
-        </div>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
-        <script src="./script.js"></script> 
-    </body>
+    </div>
+    <div class="tools">
+        <h3>More Tools</h3>
+        
+        <button id="changeColorBtn">
+            <img src="assets/Untitled design (5).png" alt="Color Icon" class="button-icon"> Change Canvas Color
+        </button>
+        
+        <label for="brushSize">Brush Size:</label>
+        <input type="range" id="brushSize" min="1" max="20" value="5">
+    
+        <button id="eraseBtn">
+            <img src="assets/eraser.png" alt="Erase Icon" class="button-icon"> Erase
+        </button>
+        
+        <button id="saveBtn">
+            <img src="assets/save.png" alt="Save Icon" class="button-icon"> Save Drawing
+        </button>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <script src="./script.js"></script> <!-- Link to your JavaScript file -->
+</body>
 </html>
